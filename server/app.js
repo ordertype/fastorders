@@ -11,6 +11,22 @@ var express = require('express');
 var mongoose = require('mongoose');
 var config = require('./config/environment');
 
+
+
+var mongo = process.env.DB_PORT_27017_TCP_ADDR;
+var mongo_port = process.env.DB_PORT_27017_TCP_PORT;
+
+//var mongo = process.env.MONGO_PORT_27017_TCP_ADDR;
+//var mongo_port = process.env.MONGO_PORT_27017_TCP_PORT;
+
+console.log('Mongo ADDR: %s ', mongo);
+console.log('Mongo PORT: %s ', mongo_port);
+
+
+// Connect to our mongo database
+config.mongo.uri = 'mongodb://' + mongo + ':' + mongo_port + '/meanorders-dev';
+
+
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
 
