@@ -24,7 +24,7 @@ console.log('Mongo PORT: %s ', mongo_port);
 
 
 // Connect to our mongo database
-config.mongo.uri = 'mongodb://' + mongo + ':' + mongo_port + '/meanorders-dev';
+config.mongo.uri = 'mongodb://' + mongo + ':' + mongo_port + '/fastorders-dev';
 
 
 // Connect to database

@@ -1,5 +1,5 @@
 web:
-  image: meanorders/web
+  image: fastorders/web
   links:
    - db
   ports:
