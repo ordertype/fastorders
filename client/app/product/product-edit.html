@@ -1,19 +1,4 @@
-    
 <div ng-include="'components/navbar/navbar.html'"></div>
 <form class="form-horizontal" role="form" ng-submit="updateProduct()">
   <div ng-include="'app/product/form.html'"></div>
 </form>
-<div ng-controller="ProductViewCtrl">
-<div class="usage row">
-    <h4>Two Way Data Binding</h4>
-    <p>This demo demonstrate two way data binding and live <code>ng-model</code> and <code>schema-form</code> Attributes. Change model and the schema accordingly and click commit to see the changes.</p>
-    <div class="row live">
-        <div class="col-md-4">
-            <h5>Form</h5>
-            <!--<form schema-form="complexSchema" ng-model="complexModel"></form>-->
-                <form sf-schema="productSchema" sf-form="form" sf-model="model" >
-        </div>
-    </div>
-</div>
-</div>
-

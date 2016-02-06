@@ -6,7 +6,13 @@ angular.module('fastordersApp', [
   'ngSanitize',
   'btford.socket-io',
   'ui.router',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'ui.grid',
+  'ui.grid.pagination',
+  'ui.grid.selection',
+  'ui-notification',
+  'dialogs.main',
+  'dialogs.default-translations'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
@@ -14,9 +20,17 @@ angular.module('fastordersApp', [
 
     $locationProvider.html5Mode(true);
     $httpProvider.interceptors.push('authInterceptor');
-  })
-
-  .factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {
+  }).config(function(NotificationProvider) {
+        NotificationProvider.setOptions({
+            delay: 10000,
+            startTop: 20,
+            startRight: 10,
+            verticalSpacing: 20,
+            horizontalSpacing: 20,
+            positionX: 'right',
+            positionY: 'top'
+        });
+    }).factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {
     return {
       // Add authorization token to headers
       request: function (config) {
