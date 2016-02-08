@@ -17,7 +17,7 @@ angular.module('fastordersApp')
         controller: 'ProductEditCtrl'
       }).state('newProduct',{
         url:'/product/new',
-        templateUrl:'app/product/product-add.html',
+        templateUrl:'app/product/product-edit.html',
         controller:'ProductCreateController'
       });
   }).run(function($state) {

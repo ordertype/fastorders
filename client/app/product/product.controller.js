@@ -1,5 +1,38 @@
 'use strict';
 
+      var schema = {
+          type: "object",
+          properties: {
+              sku: {  type: "string",
+                      minLength: 2, 
+                      title: "SKU"},
+              name: { type: "string", 
+                      minLength: 2,
+                      title: "Name" },
+              description: { type: "string", 
+                      minLength: 2, 
+                      title: "Description" },
+              price: { type: "string", 
+                      minLength: 2, 
+                      title: "Price" },
+              lastUpdate: { type: "string", 
+                      title: "Last update", 
+                      description: "The date and time the product was updated" }                                                                  
+          }    
+      };
+
+     var form = [
+           { key: "sku",
+             placeholder: "SKU identifier for the product"}, 
+           { key: "name", 
+             placeholder: "Product Name"},
+           { key: "description", 
+             placeholder: "Product Description"},
+           { key: "price", 
+             placeholder: "Product Price"}
+
+      ];
+
 angular.module('fastordersApp')
   .controller('ProductCtrl', function ($state, $scope, $http, Auth, User, $location, socket, Notification, dialogs) {
 
@@ -76,71 +109,104 @@ angular.module('fastordersApp')
   .controller('ProductViewCtrl',function ($state, $scope,$location,  $http, $stateParams, Auth, User) {  
 
       $scope.product = '';
-
+      
       $scope.submitButton = "Edit";
-      $scope.secondButton = "Return";     
-      $scope.isReadOnly = true;
-      $http.get('/api/products/' + $stateParams.id).success(function(product) {
-          $scope.product = product;
-      });
-  
-      $scope.cancel = function() {
-        $state.go('product');
+      $scope.secondButton = "Return";
+      
+      $scope.isEditMode = false;
+      
+      $scope.schema = schema;
+      $scope.form = form;
+ 
+      $scope.model = {};    
+      
+      $scope.onSubmit = function (form) {
+
+          for (var i in $scope.form) {
+              var object = $scope.form[i];
+              if (object.hasOwnProperty("key")) {
+                  object.readonly = $scope.isEditMode;
+              }
+          }
+          
+        $state.go('editProduct',{id: $scope.model._id});
+ 
+      } 
+      
+      $scope.cancel = function () {
+          $state.go('product');
       }; 
       
-      $scope.updateProduct = function() {
-        $scope.isReadOnly = false;
-        $state.go('editProduct',{id: $scope.product._id});
-      };    
+      $http.get('/api/products/' + $stateParams.id).success(function (product) {
+          $scope.model = product;
+          
+          for (var i in $scope.form) {
+              var object = $scope.form[i];
+              if (object.hasOwnProperty("key")) {
+                  object.readonly = !$scope.isEditMode;
+              }
+          }
+
+      });
+      
+
+
      
   }).controller('ProductCreateController',function($state, $scope,$http,$stateParams, $location,Notification, dialogs){
 
     $scope.product= {};
     $scope.submitButton = "Create";
-    $scope.secondButton = "Cancel";     
-    $scope.addProduct = function(){
-      var productName = $scope.product.name;
-      var dlg = dialogs.confirm("Alert", "Please confirm creating the product " + productName);
-      
- 
-       dlg.result.then(function(btn){
-         $http.post('/api/products', $scope.product).success(function(product, $state) {
+    $scope.secondButton = "Cancel";  
+
+    $scope.schema = schema;
+    $scope.form = form; 
+    $scope.model = {};           
+       
+    $scope.onSubmit = function () {
+        var productName = $scope.model.name;
+        var dlg = dialogs.confirm("Alert", "Please confirm creating the product " + productName);
+
+
+        dlg.result.then(function (btn) {
+            $http.post('/api/products', $scope.model).success(function (product, $state) {
+                $state.go('product');
+                Notification.success({ message: 'Product ' + productName + ' created', title: 'Create operation' });
+            }).error(function (data, status, headers, config) {
+                Notification.error({ message: 'Product ' + productName + ' was not created', title: 'Create operation' });
+                Notification.error({ message: 'Error: ' + data.err, title: 'Create operation' });
+            })
+        }, function (btn) {
             $state.go('product');
-             Notification.success({message: 'Product ' + productName + ' created', title: 'Create operation'});
-        }).error(function(data, status, headers, config) {
-             Notification.error({message: 'Product ' + productName + ' was not created', title: 'Create operation'});
-             Notification.error({message: 'Error: ' + data.err, title: 'Create operation'});  
-        })
-       },function(btn){
-            $state.go('product');
-            Notification.success({message: 'Product ' + productName + ' create cancelled', title: 'Create operation'});
-       });
-        
-        };
-    
-    $scope.cancel = function() {
-      $state.go('product');
-      Notification.success({message: 'Product create cancelled', title: 'Create operation'});
+            Notification.success({ message: 'Product ' + productName + ' create cancelled', title: 'Create operation' });
+        });
+
+    };
+
+    $scope.cancel = function () {
+        $state.go('product');
+        Notification.success({ message: 'Product create cancelled', title: 'Create operation' });
     }
 
   }).controller('ProductEditCtrl',function ($state, $scope,  $http,  $location, $stateParams, Auth, User, Notification, dialogs) {  
 
    $scope.product = '';
 
+    $scope.schema = schema;
+    $scope.form = form;
    
 
-   $scope.updateProduct = function(){
+    $scope.onSubmit = function(){
        
         var dlg = dialogs.confirm();
        dlg.result.then(function(btn){
            
-            $http.put('/api/products/' + $stateParams.id, $scope.product).success(function(product, $state) {
-                Notification.success({message: 'Product ' + $scope.product.name + ' Updated', title: 'Update operation'});
+            $http.put('/api/products/' + $stateParams.id, $scope.model).success(function(product, $state) {
+                Notification.success({message: 'Product ' + $scope.model.name + ' Updated', title: 'Update operation'});
             })           
-            $state.go('viewProduct',{id: $scope.product._id});
+            $state.go('viewProduct',{id: $scope.model._id});
 
        },function(btn){
-            Notification.success({message: 'Product ' + $scope.product.name + ' Update cancelled', title: 'Update operation'});
+            Notification.success({message: 'Product ' + $scope.model.name + ' Update cancelled', title: 'Update operation'});
        });      
      };
 
@@ -148,7 +214,7 @@ angular.module('fastordersApp')
       $scope.submitButton = "Save";
       $scope.secondButton = "Cancel";           
       $http.get('/api/products/' + $stateParams.id).success(function(product) {
-          $scope.product = product;
+          $scope.model = product;
       })
     };
 

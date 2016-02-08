@@ -12,7 +12,8 @@ angular.module('fastordersApp', [
   'ui.grid.selection',
   'ui-notification',
   'dialogs.main',
-  'dialogs.default-translations'
+  'dialogs.default-translations',
+  'schemaForm'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

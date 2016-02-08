@@ -1,4 +1,33 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
-<form class="form-horizontal" role="form" ng-submit="updateProduct()">
-  <div ng-include="'app/product/form.html'"></div>
-</form>
+
+<div>
+    <form name="productForm" 
+          sf-schema="schema" 
+          sf-form="form" 
+          sf-model="model"
+
+          ng-submit="onSubmit(productForm)"> 
+        <div class="row">
+            <div class="col-md-6">
+                <div sf-insert-field="['sku']"></div>
+            </div>
+            <div class="col-md-6">
+                <div sf-insert-field="['name']"></div>
+            </div>
+            <div class="col-md-6">
+                <div sf-insert-field="['description']"></div>
+            </div>
+            <div class="col-md-6">
+                <div sf-insert-field="['price']"></div>
+            </div>  
+
+            <div class="col-sm-offset-2 col-sm-3">
+                <button type="submit" id="submit" class="btn btn-primary" value="{{submitButton}}"/>
+                <button type="button" id="cancel" class="btn btn-info"  value="{{secondButton}}"/>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+
