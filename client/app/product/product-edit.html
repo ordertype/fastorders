@@ -21,11 +21,10 @@
                 <div sf-insert-field="['price']"></div>
             </div>  
 
-            <div class="col-sm-offset-2 col-sm-3">
-                <button type="submit" id="submit" class="btn btn-primary" value="{{submitButton}}"/>
-                <button type="button" id="cancel" class="btn btn-info"  value="{{secondButton}}"/>
+            <div>
+                <button type="submit" id="submit" class="btn btn-primary" value="{{submitButton}"></button>
+                <input type="button" id="cancel" class="btn btn-info" ng-click="cancel()" value="{{secondButton}}"/>
             </div>
-
         </div>
     </form>
 </div>

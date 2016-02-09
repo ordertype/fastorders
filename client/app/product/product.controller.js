@@ -106,19 +106,7 @@ angular.module('fastordersApp')
 
    
   })
-  .controller('ProductViewCtrl',function ($state, $scope,$location,  $http, $stateParams, Auth, User) {  
-
-      $scope.product = '';
-      
-      $scope.submitButton = "Edit";
-      $scope.secondButton = "Return";
-      
-      $scope.isEditMode = false;
-      
-      $scope.schema = schema;
-      $scope.form = form;
- 
-      $scope.model = {};    
+  .controller('ProductViewCtrl',function ($state, $scope, $location,  $http, $stateParams, Auth, User) {  
       
       $scope.onSubmit = function (form) {
 
@@ -136,21 +124,32 @@ angular.module('fastordersApp')
       $scope.cancel = function () {
           $state.go('product');
       }; 
-      
-      $http.get('/api/products/' + $stateParams.id).success(function (product) {
-          $scope.model = product;
+
+      $scope.initialize = function () {
+          $scope.product = '';
+          $scope.isEditMode = false;
           
-          for (var i in $scope.form) {
-              var object = $scope.form[i];
-              if (object.hasOwnProperty("key")) {
-                  object.readonly = !$scope.isEditMode;
+          $scope.schema = schema;
+          $scope.form = form;
+          $scope.model = {};
+          
+          $scope.submitButton = "Edit";
+          $scope.secondButton = "Return";
+          
+          $http.get('/api/products/' + $stateParams.id).success(function (product) {
+              $scope.model = product;
+
+              for (var i in $scope.form) {
+                  var object = $scope.form[i];
+                  if (object.hasOwnProperty("key")) {
+                      object.readonly = !$scope.isEditMode;
+                  }
               }
-          }
 
-      });
-      
+          });
+      };
 
-
+      $scope.initialize();
      
   }).controller('ProductCreateController',function($state, $scope,$http,$stateParams, $location,Notification, dialogs){
 
@@ -189,43 +188,43 @@ angular.module('fastordersApp')
 
   }).controller('ProductEditCtrl',function ($state, $scope,  $http,  $location, $stateParams, Auth, User, Notification, dialogs) {  
 
-   $scope.product = '';
+      $scope.product = '';
 
-    $scope.schema = schema;
-    $scope.form = form;
-   
+      $scope.schema = schema;
+      $scope.form = form;
 
-    $scope.onSubmit = function(){
-       
-        var dlg = dialogs.confirm();
-       dlg.result.then(function(btn){
-           
-            $http.put('/api/products/' + $stateParams.id, $scope.model).success(function(product, $state) {
-                Notification.success({message: 'Product ' + $scope.model.name + ' Updated', title: 'Update operation'});
-            })           
-            $state.go('viewProduct',{id: $scope.model._id});
 
-       },function(btn){
-            Notification.success({message: 'Product ' + $scope.model.name + ' Update cancelled', title: 'Update operation'});
-       });      
-     };
+      $scope.onSubmit = function () {
 
-    $scope.loadProduct = function(){
-      $scope.submitButton = "Save";
-      $scope.secondButton = "Cancel";           
-      $http.get('/api/products/' + $stateParams.id).success(function(product) {
-          $scope.model = product;
-      })
-    };
+          var dlg = dialogs.confirm();
+          dlg.result.then(function (btn) {
 
-    $scope.loadProduct();
-    
-    $scope.cancel = function() {
-        $http.get('/api/products/' + $stateParams.id).success(function(product) {
-            
-        })
-      $state.go('viewProduct',{id: $scope.product._id});
-    };
+              $http.put('/api/products/' + $stateParams.id, $scope.model).success(function (product, $state) {
+                  Notification.success({ message: 'Product ' + $scope.model.name + ' Updated', title: 'Update operation' });
+              })
+              $state.go('viewProduct', { id: $scope.model._id });
+
+          }, function (btn) {
+              Notification.success({ message: 'Product ' + $scope.model.name + ' Update cancelled', title: 'Update operation' });
+          });
+      };
+
+      $scope.loadProduct = function () {
+          $scope.submitButton = "Save";
+          $scope.secondButton = "Cancel";
+          $http.get('/api/products/' + $stateParams.id).success(function (product) {
+              $scope.model = product;
+          })
+      };
+
+      $scope.loadProduct();
+
+      $scope.cancel = function () {
+          $http.get('/api/products/' + $stateParams.id).success(function (product) {
+
+          })
+          $state.go('viewProduct', { id: $scope.product._id });
+      };
 
     
   });
