@@ -4,16 +4,20 @@
           type: "object",
           properties: {
               sku: {  type: "string",
-                      minLength: 2, 
+                      minLength: 4,
+                      required: true, 
                       title: "SKU"},
               name: { type: "string", 
-                      minLength: 2,
+                      minLength: 6,
+                      required: true,                       
                       title: "Name" },
               description: { type: "string", 
-                      minLength: 2, 
+                      maxLength: 50,                       
+                      required: true,                       
                       title: "Description" },
-              price: { type: "string", 
+              price: { type: "number", 
                       minLength: 2, 
+                      required: true,                       
                       title: "Price" },
               lastUpdate: { type: "string", 
                       title: "Last update", 
@@ -153,13 +157,7 @@ angular.module('fastordersApp')
      
   }).controller('ProductCreateController',function($state, $scope,$http,$stateParams, $location,Notification, dialogs){
 
-    $scope.product= {};
-    $scope.submitButton = "Create";
-    $scope.secondButton = "Cancel";  
-
-    $scope.schema = schema;
-    $scope.form = form; 
-    $scope.model = {};           
+       
        
     $scope.onSubmit = function () {
         var productName = $scope.model.name;
@@ -185,6 +183,29 @@ angular.module('fastordersApp')
         $state.go('product');
         Notification.success({ message: 'Product create cancelled', title: 'Create operation' });
     }
+    
+    $scope.initialize = function () {
+
+        $scope.product = {};
+        $scope.submitButton = "Create";
+        $scope.secondButton = "Cancel";
+
+        $scope.schema = schema;
+        $scope.form = form;
+        $scope.model = {};
+
+        $scope.isEditMode = false; 
+
+        for (var i in $scope.form) {
+            var object = $scope.form[i];
+            if (object.hasOwnProperty("key")) {
+                object.readonly = $scope.isEditMode;
+            }
+        }
+
+      };
+
+      $scope.initialize();
 
   }).controller('ProductEditCtrl',function ($state, $scope,  $http,  $location, $stateParams, Auth, User, Notification, dialogs) {  
 

@@ -21,5 +21,5 @@ angular.module('fastordersApp')
         controller:'ProductCreateController'
       });
   }).run(function($state) {
-  	$state.go('product'); //make a transition to movies state when app starts
+  	$state.go('product'); 
 });
