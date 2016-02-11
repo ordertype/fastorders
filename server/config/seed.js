@@ -8,7 +8,7 @@
 
 var User = require('../api/user/user.model');
 var Product = require('../api/product/product.model');
-
+var Client = require('../api/client/client.model');
 
 User.find({}).remove(function() {
   User.create({
@@ -23,7 +23,7 @@ User.find({}).remove(function() {
     email: 'admin@admin.com',
     password: 'admin'
   }, function() {
-      console.log('finished populating users');
+      console.log('Finished populating users');
     }
   );
 });
@@ -79,5 +79,29 @@ Product.find({}).remove(function() {
     name : 'Smart Build System',
     info : 'Build system ignores `spec` files, allowing you to keep tests alongside code. Automatic injection of scripts and styles into your index.html',
     price: '110'  
-  });
+  }, function() {
+      console.log('Finished populating Products');
+    });
+});
+
+
+Client.find({}).remove(function() {
+  Product.create({
+    id : 'e10',
+    name : 'Alfredo Edye',
+    address: 'La Rufina, La Calera',
+    comment: 'Come mucho y no paga la cuenta'
+  },{
+    id : 'ji',
+    name : 'Javier Ibaniez',
+    address: 'Ba Gral Paz, Cordoba',
+    comment: 'Come mucho mas que E10y pero si paga'
+  },{
+    id : 'gd',
+    name : 'Gustavo Dobro',
+    address: 'Arguello, Cordoba',
+    comment: 'Pide comida light con postres con grasa'
+  }, function() {
+      console.log('Finished populating Clients');
+    });
 });

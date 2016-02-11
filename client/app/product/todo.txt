@@ -1,0 +1,5 @@
+revisar como usar sku para editar
+revisar mensaje a mostrar en caso de dup
+validar form antes de create/update
+boton de navegabilidad
+botones a la derecha

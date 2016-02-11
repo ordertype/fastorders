@@ -12,7 +12,7 @@ module.exports = function(app) {
   app.use('/api/users', require('./api/user'));
   
   app.use('/api/products', require('./api/product'));
-
+  app.use('/api/clients', require('./api/client'));
   app.use('/auth', require('./auth'));
   
   // All undefined asset or api routes should return a 404
